@@ -44,6 +44,28 @@ public class Database {
   }
 
   public User getUser(String id) {
+    try {
+
+      Class.forName("org.sqlite.JDBC");
+      this.connection = DriverManager.getConnection("jdbc:sqlite:" + this.databaseName + ".db");
+      connection.setAutoCommit(false);
+      this.statement = connection.createStatement();
+      ResultSet resultset = statement.executeQuery("SELECT * FROM " + this.databaseName + "WHERE ID = " + id + ";");
+
+      resultset.next();
+
+      User user = new User(resultset.getString("NAME"), resultset.getDouble("SALDO"));
+
+      resultset.close();
+      statement.close();
+      connection.close();
+
+      return user;
+
+    } catch (Exception e) {
+      System.out.println("Error: " + e.toString());
+    }
+
     return new User("Teste", 9.0);
   }
 
