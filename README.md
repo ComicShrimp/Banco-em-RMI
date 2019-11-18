@@ -1,6 +1,6 @@
-**#Step by Step to make RMI Calculator With Java**
+# **Step by Step to make RMI Calculator With Java**
 
-##Como Executar:
+## Como Executar:
 
   1.  Rodar o .sh
   
