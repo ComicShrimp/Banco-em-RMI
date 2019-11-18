@@ -24,6 +24,28 @@ public class Database {
     System.out.println("Conexão Feita com sucesso.");
   }
 
+  public boolean updateUser(User usuario, String id) {
+    try {
+      Class.forName("org.sqlite.JDBC");
+      this.connection = DriverManager.getConnection("jdbc:sqlite:" + databaseName + ".db");
+      connection.setAutoCommit(false);
+      this.statement = connection.createStatement();
+
+      statement.executeQuery(
+          "UPDATE " + this.databaseName + " set SALDO = " + usuario.getSaldo() + " WHERE ID = " + id + ";");
+      connection.commit();
+
+      statement.close();
+      connection.close();
+
+      return true;
+
+    } catch (Exception e) {
+      System.out.println("Error: " + e.toString());
+      return false;
+    }
+  }
+
   public void insertUser(User usuario) {
     try {
 
@@ -69,8 +91,15 @@ public class Database {
     return new User("Teste", 9.0);
   }
 
-  public boolean fazTrasacao(String id) {
+  public boolean fazTrasacao(String id, double transacao) {
+    User novoUser = this.getUser(id);
 
-    return true;
+    if (transacao < 0 && novoUser.getSaldo() >= Math.abs(transacao)) {
+      return this.updateUser(novoUser, id);
+    } else if (transacao >= 0) {
+      return this.updateUser(novoUser, id);
+    }
+
+    return false;
   }
 }
