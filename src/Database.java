@@ -5,15 +5,15 @@ public class Database {
   Statement statement;
   String databaseName;
 
-  public Database(String databaseName) {
+  public Database(String databaseName, String nomeBanco) {
     this.databaseName = databaseName;
 
     try {
       Class.forName("org.sqlite.JDBC");
       this.connection = DriverManager.getConnection("jdbc:sqlite:" + databaseName + ".db");
       this.statement = connection.createStatement();
-      statement.executeUpdate("CREATE TABLE IF NOT EXISTS cliente "
-          + "(ID INT PRIMARY KEY NOT NULL AUTO_INCREMENT, NAME TEXT NOT NULL, SALDO REAL NOT NULL);");
+      statement.executeUpdate("CREATE TABLE IF NOT EXISTS "+ nomeBanco 
+          + "(ID INT PRIMARY KEY NOT NULL AUTO_INCREMENT, NAME TEXT NOT NULL, SALDO REAL NOT NULL, CARDNUMBER TEXT NOT NULL, PASSWORD TEXT NOT NULL, NOMEBANCO TEXT NOT NULL);");
       statement.close();
       connection.close();
 
@@ -53,8 +53,8 @@ public class Database {
       this.connection = DriverManager.getConnection("jdbc:sqlite:" + databaseName + ".db");
       connection.setAutoCommit(false);
       this.statement = connection.createStatement();
-      statement.executeUpdate("INSERT INTO " + this.databaseName + " (NAME, SALDO) values (" + usuario.getNome() + ","
-          + usuario.getSaldo() + ");");
+      statement.executeUpdate("INSERT INTO " + usuario.getNomeBanco()+"(NAME, SALDO, CARDNUMBER, PASSWORD, NOMEBANCO) values (" + usuario.getNome() + ","
+          + usuario.getSaldo() +","+usuario.getCardNumber()+","+usuario.getPassword()+","+usuario.getNomeBanco()+");");
 
       statement.close();
       connection.commit();
@@ -65,19 +65,19 @@ public class Database {
     }
   }
 
-  public User getUser(String id) {
+  public User getUser(User u) {
     try {
 
       Class.forName("org.sqlite.JDBC");
       this.connection = DriverManager.getConnection("jdbc:sqlite:" + this.databaseName + ".db");
       connection.setAutoCommit(false);
       this.statement = connection.createStatement();
-      ResultSet resultset = statement.executeQuery("SELECT * FROM " + this.databaseName + "WHERE ID = " + id + ";");
+      ResultSet resultset = statement.executeQuery("SELECT * FROM " + u.getNomeBanco() + "WHERE ID = " + u.getId() + ";");
 
       resultset.next();
 
-      User user = new User(resultset.getString("NAME"), resultset.getDouble("SALDO"));
-
+      User user = new User(resultset.getString("NAME"), resultset.getDouble("SALDO"), resultset.getString("CARDNUMBER"), resultset.getString("PASSWORD"), resultset.getString("NOMEBANCO") );
+      user.setId(resultset.getInt("ID"));
       resultset.close();
       statement.close();
       connection.close();
@@ -90,7 +90,7 @@ public class Database {
 
     return new User("Teste", 9.0);
   }
-
+/*
   public boolean fazTrasacao(String id, double transacao) {
     User novoUser = this.getUser(id);
 
@@ -101,5 +101,5 @@ public class Database {
     }
 
     return false;
-  }
+  }*/
 }

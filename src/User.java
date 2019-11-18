@@ -1,23 +1,48 @@
 import java.io.Serializable;
 
+
 public class User implements Serializable {
   // Atributos
   private static final long serialVersionUID = 1L;
   private String cardNumber;
-  private double sale;
-  String nome;
-  Double saldo;
+  private String nome;
+  private Double saldo;
+  private int id;
+  private String password;
+  private String nomeBanco;
+
 
   // Construtor tipo 1
-  public User(String Nome, Double Saldo) {
+  public User(String Nome, Double Saldo, String cardNumber, String password, String nomeBanco) {
     this.nome = Nome;
     this.saldo = Saldo;
+    this.cardNumber = cardNumber;
+    this.password = password;
+    this.nomeBanco = nomeBanco;
   }
 
-  // Construtor Tipo 2
-  public User(String CardNumber, double Sale) {
-    this.cardNumber = CardNumber;
-    this.sale = Sale;
+  public String getNomeBanco() {
+    return nomeBanco;
+  }
+
+  public void setNomeBanco(String nomeBanco) {
+    this.nomeBanco = nomeBanco;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
   }
 
   public User() {
@@ -29,14 +54,7 @@ public class User implements Serializable {
     return cardNumber;
   }
 
-  public double getSale() {
-    return sale;
-  }
-
-  public void setSale(double sale) {
-    this.sale = sale;
-  }
-
+ 
   public void setCardNumber(String cardNumber) {
     this.cardNumber = cardNumber;
   }
