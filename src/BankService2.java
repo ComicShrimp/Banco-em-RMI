@@ -18,7 +18,7 @@ public class BankService2 extends UnicastRemoteObject implements Bank {
 
   String name = "Bradesco";
 
-  public BankService() throws RemoteException {
+  public BankService2() throws RemoteException {
      File baseDados = new File("../src/bases/Banco2.csv");   
      
      String[] campos = {};
@@ -107,7 +107,7 @@ public class BankService2 extends UnicastRemoteObject implements Bank {
   public double makeWithdraw(String tokenId, String password, double value) throws RemoteException {
     double takenOutValue = 0.0f;
     for (User user : database) {
-      if (user.getCardNumber().equals(tokenId)) {
+      if (user.getCardNumber().equals(tokenId)  ) {
         if (user.getSaldo() < value) {
           return 0.0f;
         } else {

@@ -146,7 +146,7 @@ public class BankService extends UnicastRemoteObject implements Bank {
     }
   }
 
-  public boolean makeTransfer(String fromUser, String toUser, double value) throws RemoteException {
+  public boolean makeTransfer(String fromUser, String toUser, String password, double value) throws RemoteException {
     int fi = 0, ti = 0;
     for (User user : database) {
       if (user.getCardNumber().equals(fromUser)) {
