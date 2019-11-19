@@ -5,6 +5,9 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import javax.swing.JOptionPane;
+
 import java.io.IOException;
 
 public class BankService2 extends UnicastRemoteObject implements Bank {
@@ -38,7 +41,7 @@ public class BankService2 extends UnicastRemoteObject implements Bank {
          u.setSaldo(Double.valueOf(campos[4])); 
          database.add(u);
         }
-
+        leitor.close();
      } catch (FileNotFoundException e) {
        e.printStackTrace();
      }
@@ -54,7 +57,8 @@ public class BankService2 extends UnicastRemoteObject implements Bank {
          return database.indexOf(u);
        }
     }
-    
+  
+    JOptionPane.showMessageDialog(null, "Inserir o cartão corretamente!", "Conta não encontrada!", JOptionPane.ERROR_MESSAGE);
 
     return -1;
   }
@@ -66,11 +70,13 @@ public class BankService2 extends UnicastRemoteObject implements Bank {
     return name;
   }
   
+
+
   public void writeCsv(){
     FileWriter fileWriter = null;
 
     try{
-      fileWriter = new FileWriter("../src/bases/Banco2.csv");
+      fileWriter = new FileWriter("../src/bases/Banco1.csv");
       fileWriter.append(FILE_HEADER.toString());
       fileWriter.append("\n");
 
@@ -107,14 +113,21 @@ public class BankService2 extends UnicastRemoteObject implements Bank {
   public double makeWithdraw(String tokenId, String password, double value) throws RemoteException {
     double takenOutValue = 0.0f;
     for (User user : database) {
-      if (user.getCardNumber().equals(tokenId)  ) {
+      if (user.getCardNumber().equals(tokenId)) {
+
         if (user.getSaldo() < value) {
+          JOptionPane.showMessageDialog(null,"Saldo insuficiente!", "", JOptionPane.ERROR_MESSAGE);
           return 0.0f;
         } else {
-          takenOutValue = user.getSaldo() - value;
-          user.setSaldo((double) (user.getSaldo() - value));
-          writeCsv();
-          return takenOutValue;
+          if(user.getPassword().equals(password)){
+            takenOutValue = user.getSaldo() - value;
+            user.setSaldo((double) (user.getSaldo() - value));
+            writeCsv();
+            return takenOutValue;
+          }else{
+            JOptionPane.showMessageDialog(null,"Senha Incorreta", "Erro", JOptionPane.ERROR_MESSAGE);
+          }
+          
         }
 
       }
@@ -126,14 +139,19 @@ public class BankService2 extends UnicastRemoteObject implements Bank {
   public void makeDeposit(String tokenId, String password, double value) throws RemoteException {
     for (User user : database) {
       if (user.getCardNumber().equals(tokenId)) {
-        user.setSaldo(user.getSaldo() + value);
-        writeCsv();
-        break;
+        if(user.getPassword().equals(password)){
+          user.setSaldo(user.getSaldo() + value);
+          writeCsv();
+          break;
+        }else{
+          JOptionPane.showMessageDialog(null,"Senha Incorreta", "Erro", JOptionPane.ERROR_MESSAGE); 
+        }
+        
       }
     }
   }
 
-  public boolean makeTransfer(String fromUser, String toUser, double value) throws RemoteException {
+  public boolean makeTransfer(String fromUser, String toUser, String password, double value) throws RemoteException {
     int fi = 0, ti = 0;
     for (User user : database) {
       if (user.getCardNumber().equals(fromUser)) {
@@ -146,12 +164,20 @@ public class BankService2 extends UnicastRemoteObject implements Bank {
     }
 
     if (database.get(fi).getSaldo() < value) {
+      JOptionPane.showMessageDialog(null,"Saldo insuficiente para realizar a transferência!", "", JOptionPane.ERROR_MESSAGE);
       return false;
     } else {
-      database.get(fi).setSaldo(database.get(fi).getSaldo() - value);
-      database.get(ti).setSaldo(database.get(ti).getSaldo() + value);
-      writeCsv();
-      return true;
+      if(database.get(fi).getPassword().equals(password)){
+        database.get(fi).setSaldo(database.get(fi).getSaldo() - value);
+        database.get(ti).setSaldo(database.get(ti).getSaldo() + value);        
+        writeCsv();
+        JOptionPane.showMessageDialog(null,"Transferência Realizada com sucesso!", "", JOptionPane.OK_OPTION);
+        return true;
+      }else{
+        JOptionPane.showMessageDialog(null,"Senha Incorreta", "Erro", JOptionPane.ERROR_MESSAGE); 
+        return false;
+      }
+      
     }
 
   }
