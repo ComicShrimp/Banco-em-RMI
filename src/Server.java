@@ -5,10 +5,12 @@ import java.rmi.registry.LocateRegistry;
 public class Server {
   Server() {
     try {
+      System.setProperty("java.rmi.hostname","127.0.0.1");
+      LocateRegistry.createRegistry(1099);
       Bank c = new BankService();
       Naming.rebind("BancoService", (Remote) c);
-      Bank a = new BankService2();
-      Naming.rebind("BancoService2", (Remote) a);
+  //    Bank a = new BankService2();
+    //  Naming.rebind("BancoService2", (Remote) a);
 
     } catch (Exception e) {
       e.printStackTrace();

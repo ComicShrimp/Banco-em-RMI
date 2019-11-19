@@ -1,54 +1,62 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.Scanner;
+import java.io.IOException;
 
 public class BankService2 extends UnicastRemoteObject implements Bank {
 
-  java.util.ArrayList<User> database = new ArrayList<>();
-  String[] numbers = { "5581 7461 6024 0275", "5171 0511 6130 1176", "5484 2803 4769 6777", "5580 6278 6824 7815",
-      "5314 4726 2902 1966" };
+   ArrayList<User> database = new ArrayList<>();
+   private static final String FILE_HEADER = "Name,CardNumber,Password,BankName,Saldo";
+   
+
 
   private static final long serialVersionUID = 1L;
 
-  String name = "ST";
+  String name = "Bradesco";
 
-  public BankService2() throws RemoteException {
+  public BankService() throws RemoteException {
+     File baseDados = new File("../src/bases/Banco2.csv");   
+     
+     String[] campos = {};
+     try {
+       Scanner leitor = new Scanner(baseDados);
+        
+       leitor.nextLine();
 
-    for (int i = 0; i < 5; i++) {
-      User newUser = new User();
-      newUser.setCardNumber(numbers[i]);
-      newUser.setSaldo(100.0 * i);
-      database.add(newUser);
-    }
-  }
-
-  public boolean getAccount(String token) throws RemoteException {
-    for (User user : database) {
-      if (user.getCardNumber().equals(token)) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  public double makeWithdraw(String tokenId, double value) throws RemoteException {
-    double takenOutValue = 0.0f;
-    for (User user : database) {
-      if (user.getCardNumber().equals(tokenId)) {
-
-        if (user.getSaldo() < value) {
-          return 0.0f;
-        } else {
-          takenOutValue = user.getSaldo() - value;
-          user.setSaldo((double) (user.getSaldo() - value));
-          return takenOutValue;
+       while(leitor.hasNext()){
+         String l = leitor.nextLine();
+         campos = l.split(",");
+         User u = new User();
+         u.setNome(String.valueOf(campos[0]));
+         u.setCardNumber(String.valueOf(campos[1]));
+         u.setPassword(String.valueOf(campos[2]));
+         u.setNomeBanco(String.valueOf(campos[3]));
+         u.setSaldo(Double.valueOf(campos[4])); 
+         database.add(u);
         }
 
-      }
-    }
+     } catch (FileNotFoundException e) {
+       e.printStackTrace();
+     }
 
-    return takenOutValue;
+
+
+  }
+
+  public int getAccount(String token) throws RemoteException {
+    
+    for(User u: database){
+       if(u.getCardNumber().equals(token)){
+         return database.indexOf(u);
+       }
+    }
+    
+
+    return -1;
   }
 
   /**
@@ -57,11 +65,69 @@ public class BankService2 extends UnicastRemoteObject implements Bank {
   public String getName() {
     return name;
   }
+  
+  public void writeCsv(){
+    FileWriter fileWriter = null;
 
-  public void makeDeposit(String tokenId, double value) throws RemoteException {
+    try{
+      fileWriter = new FileWriter("../src/bases/Banco2.csv");
+      fileWriter.append(FILE_HEADER.toString());
+      fileWriter.append("\n");
+
+      for(User u: database){
+        fileWriter.append(u.getNome());
+        fileWriter.append(",");
+        fileWriter.append(u.getCardNumber());
+        fileWriter.append(",");
+        fileWriter.append(u.getPassword());
+        fileWriter.append(",");
+        fileWriter.append(u.getNomeBanco());
+        fileWriter.append(",");
+        fileWriter.append(String.valueOf(u.getSaldo()));
+        fileWriter.append("\n");
+      }
+      
+
+    }catch(Exception e){
+         System.out.println(e.getMessage());
+    } finally{
+      try {
+        fileWriter.flush();
+        fileWriter.close();
+    } catch (IOException e) {
+        System.out.println("Error while flushing/closing fileWriter !!!");
+        e.printStackTrace();
+    }
+
+    }
+  }
+
+
+
+  public double makeWithdraw(String tokenId, String password, double value) throws RemoteException {
+    double takenOutValue = 0.0f;
+    for (User user : database) {
+      if (user.getCardNumber().equals(tokenId)) {
+        if (user.getSaldo() < value) {
+          return 0.0f;
+        } else {
+          takenOutValue = user.getSaldo() - value;
+          user.setSaldo((double) (user.getSaldo() - value));
+          writeCsv();
+          return takenOutValue;
+        }
+
+      }
+    }
+
+    return 0.0f;
+  }
+
+  public void makeDeposit(String tokenId, String password, double value) throws RemoteException {
     for (User user : database) {
       if (user.getCardNumber().equals(tokenId)) {
         user.setSaldo(user.getSaldo() + value);
+        writeCsv();
         break;
       }
     }
@@ -84,8 +150,10 @@ public class BankService2 extends UnicastRemoteObject implements Bank {
     } else {
       database.get(fi).setSaldo(database.get(fi).getSaldo() - value);
       database.get(ti).setSaldo(database.get(ti).getSaldo() + value);
+      writeCsv();
       return true;
     }
+
   }
 
   public void getSale(String tokenId) throws RemoteException {

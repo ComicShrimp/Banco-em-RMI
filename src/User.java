@@ -23,6 +23,16 @@ public class User implements Serializable {
 
   }
 
+  @Override
+  public String toString() {
+    System.out.println(this.nome);
+    System.out.println(this.cardNumber);
+    System.out.println(this.password);
+    System.out.println(this.saldo); 
+    return super.toString();
+  }
+
+
   // Getter e Setters
   public String getNomeBanco() {
     return nomeBanco;
