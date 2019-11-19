@@ -46,6 +46,8 @@ public class BankService extends UnicastRemoteObject implements Bank {
        * System.out.println(database.get(4).toString());
        */
 
+      leitor.close();
+
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }

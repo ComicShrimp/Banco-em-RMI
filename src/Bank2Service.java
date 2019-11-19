@@ -37,6 +37,7 @@ public class Bank2Service extends UnicastRemoteObject implements Bank {
         database.add(u);
       }
 
+      leitor.close();
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
