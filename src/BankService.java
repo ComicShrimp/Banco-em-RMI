@@ -9,65 +9,56 @@ import java.io.IOException;
 
 public class BankService extends UnicastRemoteObject implements Bank {
 
-   ArrayList<User> database = new ArrayList<>();
-   private static final String FILE_HEADER = "Name,CardNumber,Password,BankName,Saldo";
-   
-
+  ArrayList<User> database = new ArrayList<>();
+  private static final String FILE_HEADER = "Name,CardNumber,Password,BankName,Saldo";
 
   private static final long serialVersionUID = 1L;
 
   String name = "BB";
 
   public BankService() throws RemoteException {
-     File baseDados = new File("../src/bases/Banco1.csv");   
-     
-     String[] campos = {};
-     try {
-       Scanner leitor = new Scanner(baseDados);
-        
-       leitor.nextLine();
+    File baseDados = new File("../src/bases/Banco1.csv");
 
-       while(leitor.hasNext()){
-         String l = leitor.nextLine();
-         campos = l.split(",");
-         User u = new User();
-         u.setNome(String.valueOf(campos[0]));
-         u.setCardNumber(String.valueOf(campos[1]));
-         u.setPassword(String.valueOf(campos[2]));
-         u.setNomeBanco(String.valueOf(campos[3]));
-         u.setSaldo(Double.valueOf(campos[4])); 
-         database.add(u);
-        }
+    String[] campos = {};
+    try {
+      Scanner leitor = new Scanner(baseDados);
 
-       /*
-       System.out.println(campos.length);
-      System.out.println(database.get(0).toString());
-      System.out.println();
-      System.out.println(database.get(1).toString());
-      System.out.println();
-      System.out.println(database.get(2).toString());
-      System.out.println();
-      System.out.println(database.get(3).toString());
-      System.out.println();
-      System.out.println(database.get(4).toString());
-    */
+      leitor.nextLine();
 
-     } catch (FileNotFoundException e) {
-       e.printStackTrace();
-     }
+      while (leitor.hasNext()) {
+        String l = leitor.nextLine();
+        campos = l.split(",");
+        User u = new User();
+        u.setNome(String.valueOf(campos[0]));
+        u.setCardNumber(String.valueOf(campos[1]));
+        u.setPassword(String.valueOf(campos[2]));
+        u.setNomeBanco(String.valueOf(campos[3]));
+        u.setSaldo(Double.valueOf(campos[4]));
+        database.add(u);
+      }
 
+      /*
+       * System.out.println(campos.length);
+       * System.out.println(database.get(0).toString()); System.out.println();
+       * System.out.println(database.get(1).toString()); System.out.println();
+       * System.out.println(database.get(2).toString()); System.out.println();
+       * System.out.println(database.get(3).toString()); System.out.println();
+       * System.out.println(database.get(4).toString());
+       */
 
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
 
   }
 
   public int getAccount(String token) throws RemoteException {
-    
-    for(User u: database){
-       if(u.getCardNumber().equals(token)){
-         return database.indexOf(u);
-       }
+
+    for (User u : database) {
+      if (u.getCardNumber().equals(token)) {
+        return database.indexOf(u);
+      }
     }
-    
 
     return -1;
   }
@@ -78,16 +69,16 @@ public class BankService extends UnicastRemoteObject implements Bank {
   public String getName() {
     return name;
   }
-  
-  public void writeCsv(){
+
+  public void writeCsv() {
     FileWriter fileWriter = null;
 
-    try{
+    try {
       fileWriter = new FileWriter("../src/bases/Banco1.csv");
       fileWriter.append(FILE_HEADER.toString());
       fileWriter.append("\n");
 
-      for(User u: database){
+      for (User u : database) {
         fileWriter.append(u.getNome());
         fileWriter.append(",");
         fileWriter.append(u.getCardNumber());
@@ -99,23 +90,20 @@ public class BankService extends UnicastRemoteObject implements Bank {
         fileWriter.append(String.valueOf(u.getSaldo()));
         fileWriter.append("\n");
       }
-      
 
-    }catch(Exception e){
-         System.out.println(e.getMessage());
-    } finally{
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    } finally {
       try {
         fileWriter.flush();
         fileWriter.close();
-    } catch (IOException e) {
+      } catch (IOException e) {
         System.out.println("Error while flushing/closing fileWriter !!!");
         e.printStackTrace();
-    }
+      }
 
     }
   }
-
-
 
   public double makeWithdraw(String tokenId, String password, double value) throws RemoteException {
     double takenOutValue = 0.0f;
