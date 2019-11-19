@@ -6,11 +6,13 @@
   
   2.  cd Executaveis
   
-  3.  Executar o comando: "rmic pack.CalculadoraImple"
+  3.  Executar o comando: "rmic Arquivos_de_servicos"
+   
+  4.  Executar "rmiregestry"
+
+  5.  Executar o Servidor: "java server"
   
-  4.  Executar o Servidor: "java pack.CalculadoraServer"
-  
-  5.  Executar o Cliente: "rmic pack.CalculadoraClient"
+  6.  Executar o Cliente: "java client"
 
 
 
