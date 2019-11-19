@@ -1,3 +1,5 @@
+package BancoRMI;
+
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -13,7 +15,9 @@ public class BankService extends UnicastRemoteObject implements Bank {
   public BankService() throws RemoteException {
 
     for (int i = 0; i < 5; i++) {
-      User newUser = new User(numbers[i], 100 * i);
+      User newUser = new User();
+      newUser.setCardNumber(numbers[i]);
+      newUser.setSaldo(100.0 * i);
       database.add(newUser);
     }
   }
@@ -33,11 +37,11 @@ public class BankService extends UnicastRemoteObject implements Bank {
     for (User user : database) {
       if (user.getCardNumber().equals(tokenId)) {
 
-        if (user.getSale() < value) {
+        if (user.getSaldo() < value) {
           return 0.0f;
         } else {
-          takenOutValue = user.getSale() - value;
-          user.setSale((double) (user.getSale() - value));
+          takenOutValue = user.getSaldo() - value;
+          user.setSaldo((double) (user.getSaldo() - value));
           return takenOutValue;
         }
 
@@ -50,7 +54,7 @@ public class BankService extends UnicastRemoteObject implements Bank {
   public void makeDeposit(String tokenId, double value) throws RemoteException {
     for (User user : database) {
       if (user.getCardNumber().equals(tokenId)) {
-        user.setSale(user.getSale() + value);
+        user.setSaldo(user.getSaldo() + value);
         break;
       }
     }
@@ -68,11 +72,11 @@ public class BankService extends UnicastRemoteObject implements Bank {
       }
     }
 
-    if (database.get(fi).getSale() < value) {
+    if (database.get(fi).getSaldo() < value) {
       return false;
     } else {
-      database.get(fi).setSale(database.get(fi).getSale() - value);
-      database.get(ti).setSale(database.get(ti).getSale() + value);
+      database.get(fi).setSaldo(database.get(fi).getSaldo() - value);
+      database.get(ti).setSaldo(database.get(ti).getSaldo() + value);
       return true;
     }
   }
@@ -80,7 +84,7 @@ public class BankService extends UnicastRemoteObject implements Bank {
   public void getSale(String tokenId) throws RemoteException {
     for (User user : database) {
       if (user.getCardNumber().equals(tokenId)) {
-        System.out.println(user.getSale());
+        System.out.println(user.getSaldo());
         break;
       }
     }

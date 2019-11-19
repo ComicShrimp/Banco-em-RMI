@@ -1,3 +1,5 @@
+package Example;
+
 import java.rmi.Naming;
 import java.rmi.Remote;
 import java.rmi.registry.LocateRegistry;

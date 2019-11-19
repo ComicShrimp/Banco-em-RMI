@@ -1,5 +1,6 @@
-import java.io.Serializable;
+package BancoRMI;
 
+import java.io.Serializable;
 
 public class User implements Serializable {
   // Atributos
@@ -11,8 +12,7 @@ public class User implements Serializable {
   private String password;
   private String nomeBanco;
 
-
-  // Construtor tipo 1
+  // Construtores
   public User(String Nome, Double Saldo, String cardNumber, String password, String nomeBanco) {
     this.nome = Nome;
     this.saldo = Saldo;
@@ -21,6 +21,11 @@ public class User implements Serializable {
     this.nomeBanco = nomeBanco;
   }
 
+  public User() {
+
+  }
+
+  // Getter e Setters
   public String getNomeBanco() {
     return nomeBanco;
   }
@@ -45,16 +50,10 @@ public class User implements Serializable {
     this.id = id;
   }
 
-  public User() {
-
-  }
-
-  // Getter e Setters
   public String getCardNumber() {
     return cardNumber;
   }
 
- 
   public void setCardNumber(String cardNumber) {
     this.cardNumber = cardNumber;
   }

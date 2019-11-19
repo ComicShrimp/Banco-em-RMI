@@ -1,3 +1,5 @@
+package BancoRMI;
+
 import java.sql.*;
 
 public class Database {
@@ -12,7 +14,7 @@ public class Database {
       Class.forName("org.sqlite.JDBC");
       this.connection = DriverManager.getConnection("jdbc:sqlite:" + databaseName + ".db");
       this.statement = connection.createStatement();
-      statement.executeUpdate("CREATE TABLE IF NOT EXISTS "+ nomeBanco 
+      statement.executeUpdate("CREATE TABLE IF NOT EXISTS " + nomeBanco
           + "(ID INT PRIMARY KEY NOT NULL AUTO_INCREMENT, NAME TEXT NOT NULL, SALDO REAL NOT NULL, CARDNUMBER TEXT NOT NULL, PASSWORD TEXT NOT NULL, NOMEBANCO TEXT NOT NULL);");
       statement.close();
       connection.close();
@@ -53,8 +55,9 @@ public class Database {
       this.connection = DriverManager.getConnection("jdbc:sqlite:" + databaseName + ".db");
       connection.setAutoCommit(false);
       this.statement = connection.createStatement();
-      statement.executeUpdate("INSERT INTO " + usuario.getNomeBanco()+"(NAME, SALDO, CARDNUMBER, PASSWORD, NOMEBANCO) values (" + usuario.getNome() + ","
-          + usuario.getSaldo() +","+usuario.getCardNumber()+","+usuario.getPassword()+","+usuario.getNomeBanco()+");");
+      statement.executeUpdate("INSERT INTO " + usuario.getNomeBanco()
+          + "(NAME, SALDO, CARDNUMBER, PASSWORD, NOMEBANCO) values (" + usuario.getNome() + "," + usuario.getSaldo()
+          + "," + usuario.getCardNumber() + "," + usuario.getPassword() + "," + usuario.getNomeBanco() + ");");
 
       statement.close();
       connection.commit();
@@ -72,11 +75,13 @@ public class Database {
       this.connection = DriverManager.getConnection("jdbc:sqlite:" + this.databaseName + ".db");
       connection.setAutoCommit(false);
       this.statement = connection.createStatement();
-      ResultSet resultset = statement.executeQuery("SELECT * FROM " + u.getNomeBanco() + "WHERE ID = " + u.getId() + ";");
+      ResultSet resultset = statement
+          .executeQuery("SELECT * FROM " + u.getNomeBanco() + "WHERE ID = " + u.getId() + ";");
 
       resultset.next();
 
-      User user = new User(resultset.getString("NAME"), resultset.getDouble("SALDO"), resultset.getString("CARDNUMBER"), resultset.getString("PASSWORD"), resultset.getString("NOMEBANCO") );
+      User user = new User(resultset.getString("NAME"), resultset.getDouble("SALDO"), resultset.getString("CARDNUMBER"),
+          resultset.getString("PASSWORD"), resultset.getString("NOMEBANCO"));
       user.setId(resultset.getInt("ID"));
       resultset.close();
       statement.close();
@@ -88,18 +93,20 @@ public class Database {
       System.out.println("Error: " + e.toString());
     }
 
-    return new User("Teste", 9.0);
+    User newUser = new User();
+    newUser.setNome("Teste");
+    newUser.setSaldo(9.0);
+
+    return newUser;
   }
-/*
-  public boolean fazTrasacao(String id, double transacao) {
-    User novoUser = this.getUser(id);
-
-    if (transacao < 0 && novoUser.getSaldo() >= Math.abs(transacao)) {
-      return this.updateUser(novoUser, id);
-    } else if (transacao >= 0) {
-      return this.updateUser(novoUser, id);
-    }
-
-    return false;
-  }*/
+  /*
+   * public boolean fazTrasacao(String id, double transacao) { User novoUser =
+   * this.getUser(id);
+   * 
+   * if (transacao < 0 && novoUser.getSaldo() >= Math.abs(transacao)) { return
+   * this.updateUser(novoUser, id); } else if (transacao >= 0) { return
+   * this.updateUser(novoUser, id); }
+   * 
+   * return false; }
+   */
 }
