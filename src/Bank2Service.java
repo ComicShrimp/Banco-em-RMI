@@ -5,46 +5,19 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Scanner;
-import javax.swing.JOptionPane;
 import java.io.IOException;
 
-public class BankService extends UnicastRemoteObject implements Bank {
+public class Bank2Service extends UnicastRemoteObject implements Bank {
 
   ArrayList<User> database = new ArrayList<>();
   private static final String FILE_HEADER = "Name,CardNumber,Password,BankName,Saldo";
 
   private static final long serialVersionUID = 1L;
 
-  String name = "BB";
+  String name = "Bradesco";
 
-  public BankService() throws RemoteException {
-<<<<<<< HEAD
-     File baseDados = new File("../src/bases/Banco1.csv");   
-     
-     String[] campos = {};
-     try {
-       Scanner leitor = new Scanner(baseDados);
-        
-       leitor.nextLine();
-
-       while(leitor.hasNext()){
-         String l = leitor.nextLine();
-         campos = l.split(",");
-         User u = new User();
-         u.setNome(String.valueOf(campos[0]));
-         u.setCardNumber(String.valueOf(campos[1]));
-         u.setPassword(String.valueOf(campos[2]));
-         u.setNomeBanco(String.valueOf(campos[3]));
-         u.setSaldo(Double.valueOf(campos[4])); 
-         database.add(u);
-        }
-
-       leitor.close();
-     } catch (FileNotFoundException e) {
-       e.printStackTrace();
-     }
-=======
-    File baseDados = new File("../src/bases/Banco1.csv");
+  public Bank2Service() throws RemoteException {
+    File baseDados = new File("../src/bases/Banco2.csv");
 
     String[] campos = {};
     try {
@@ -64,22 +37,11 @@ public class BankService extends UnicastRemoteObject implements Bank {
         database.add(u);
       }
 
-      /*
-       * System.out.println(campos.length);
-       * System.out.println(database.get(0).toString()); System.out.println();
-       * System.out.println(database.get(1).toString()); System.out.println();
-       * System.out.println(database.get(2).toString()); System.out.println();
-       * System.out.println(database.get(3).toString()); System.out.println();
-       * System.out.println(database.get(4).toString());
-       */
-
       leitor.close();
-
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
 
->>>>>>> d5d283b5f9ca9b8581eca5f18c564fab8b669cd8
   }
 
   public int getAccount(String token) throws RemoteException {
@@ -89,11 +51,6 @@ public class BankService extends UnicastRemoteObject implements Bank {
         return database.indexOf(u);
       }
     }
-<<<<<<< HEAD
-    JOptionPane.showMessageDialog(null, "Inserir o cartão corretamente!", "Conta não encontrada!", JOptionPane.ERROR_MESSAGE);
-
-=======
->>>>>>> d5d283b5f9ca9b8581eca5f18c564fab8b669cd8
 
     return -1;
   }
@@ -104,19 +61,12 @@ public class BankService extends UnicastRemoteObject implements Bank {
   public String getName() {
     return name;
   }
-<<<<<<< HEAD
-  
-
-
-  public void writeCsv(){
-=======
 
   public void writeCsv() {
->>>>>>> d5d283b5f9ca9b8581eca5f18c564fab8b669cd8
     FileWriter fileWriter = null;
 
     try {
-      fileWriter = new FileWriter("../src/bases/Banco1.csv");
+      fileWriter = new FileWriter("../src/bases/Banco2.csv");
       fileWriter.append(FILE_HEADER.toString());
       fileWriter.append("\n");
 
@@ -151,20 +101,13 @@ public class BankService extends UnicastRemoteObject implements Bank {
     double takenOutValue = 0.0f;
     for (User user : database) {
       if (user.getCardNumber().equals(tokenId)) {
-
         if (user.getSaldo() < value) {
-          JOptionPane.showMessageDialog(null,"Saldo insuficiente!", "", JOptionPane.ERROR_MESSAGE);
           return 0.0f;
         } else {
-          if(user.getPassword().equals(password)){
-            takenOutValue = user.getSaldo() - value;
-            user.setSaldo((double) (user.getSaldo() - value));
-            writeCsv();
-            return takenOutValue;
-          }else{
-            JOptionPane.showMessageDialog(null,"Senha Incorreta", "Erro", JOptionPane.ERROR_MESSAGE);
-          }
-          
+          takenOutValue = user.getSaldo() - value;
+          user.setSaldo((double) (user.getSaldo() - value));
+          writeCsv();
+          return takenOutValue;
         }
 
       }
@@ -176,14 +119,9 @@ public class BankService extends UnicastRemoteObject implements Bank {
   public void makeDeposit(String tokenId, String password, double value) throws RemoteException {
     for (User user : database) {
       if (user.getCardNumber().equals(tokenId)) {
-        if(user.getPassword().equals(password)){
-          user.setSaldo(user.getSaldo() + value);
-          writeCsv();
-          break;
-        }else{
-          JOptionPane.showMessageDialog(null,"Senha Incorreta", "Erro", JOptionPane.ERROR_MESSAGE); 
-        }
-        
+        user.setSaldo(user.getSaldo() + value);
+        writeCsv();
+        break;
       }
     }
   }
@@ -201,20 +139,12 @@ public class BankService extends UnicastRemoteObject implements Bank {
     }
 
     if (database.get(fi).getSaldo() < value) {
-      JOptionPane.showMessageDialog(null,"Saldo insuficiente para realizar a transferência!", "", JOptionPane.ERROR_MESSAGE);
       return false;
     } else {
-      if(database.get(fi).getPassword().equals(password)){
-        database.get(fi).setSaldo(database.get(fi).getSaldo() - value);
-        database.get(ti).setSaldo(database.get(ti).getSaldo() + value);        
-        writeCsv();
-        JOptionPane.showMessageDialog(null,"Transferência Realizada com sucesso!", "", JOptionPane.OK_OPTION);
-        return true;
-      }else{
-        JOptionPane.showMessageDialog(null,"Senha Incorreta", "Erro", JOptionPane.ERROR_MESSAGE); 
-        return false;
-      }
-      
+      database.get(fi).setSaldo(database.get(fi).getSaldo() - value);
+      database.get(ti).setSaldo(database.get(ti).getSaldo() + value);
+      writeCsv();
+      return true;
     }
 
   }
