@@ -19,32 +19,6 @@ public class Bank3Service extends UnicastRemoteObject implements Bank {
 
   String name = "Bradesco";
 
-<<<<<<< HEAD:src/BankService2.java
-  public BankService2() throws RemoteException {
-     File baseDados = new File("../src/bases/Banco2.csv");   
-     
-     String[] campos = {};
-     try {
-       Scanner leitor = new Scanner(baseDados);
-        
-       leitor.nextLine();
-
-       while(leitor.hasNext()){
-         String l = leitor.nextLine();
-         campos = l.split(",");
-         User u = new User();
-         u.setNome(String.valueOf(campos[0]));
-         u.setCardNumber(String.valueOf(campos[1]));
-         u.setPassword(String.valueOf(campos[2]));
-         u.setNomeBanco(String.valueOf(campos[3]));
-         u.setSaldo(Double.valueOf(campos[4])); 
-         database.add(u);
-        }
-        leitor.close();
-     } catch (FileNotFoundException e) {
-       e.printStackTrace();
-     }
-=======
   public Bank3Service() throws RemoteException {
     File baseDados = new File("../src/bases/Banco2.csv");
 
@@ -65,8 +39,7 @@ public class Bank3Service extends UnicastRemoteObject implements Bank {
         u.setSaldo(Double.valueOf(campos[4]));
         database.add(u);
       }
->>>>>>> d5d283b5f9ca9b8581eca5f18c564fab8b669cd8:src/Bank3Service.java
-
+      
       leitor.close();
 
     } catch (FileNotFoundException e) {
@@ -82,11 +55,6 @@ public class Bank3Service extends UnicastRemoteObject implements Bank {
         return database.indexOf(u);
       }
     }
-<<<<<<< HEAD:src/BankService2.java
-  
-    JOptionPane.showMessageDialog(null, "Inserir o cartão corretamente!", "Conta não encontrada!", JOptionPane.ERROR_MESSAGE);
-=======
->>>>>>> d5d283b5f9ca9b8581eca5f18c564fab8b669cd8:src/Bank3Service.java
 
     return -1;
   }
@@ -97,7 +65,6 @@ public class Bank3Service extends UnicastRemoteObject implements Bank {
   public String getName() {
     return name;
   }
-<<<<<<< HEAD:src/BankService2.java
   
 
 
@@ -105,15 +72,7 @@ public class Bank3Service extends UnicastRemoteObject implements Bank {
     FileWriter fileWriter = null;
 
     try{
-      fileWriter = new FileWriter("../src/bases/Banco1.csv");
-=======
-
-  public void writeCsv() {
-    FileWriter fileWriter = null;
-
-    try {
-      fileWriter = new FileWriter("../src/bases/Banco2.csv");
->>>>>>> d5d283b5f9ca9b8581eca5f18c564fab8b669cd8:src/Bank3Service.java
+      fileWriter = new FileWriter("../src/bases/Banco3.csv");
       fileWriter.append(FILE_HEADER.toString());
       fileWriter.append("\n");
 
@@ -148,10 +107,6 @@ public class Bank3Service extends UnicastRemoteObject implements Bank {
     double takenOutValue = 0.0f;
     for (User user : database) {
       if (user.getCardNumber().equals(tokenId)) {
-<<<<<<< HEAD:src/BankService2.java
-
-=======
->>>>>>> d5d283b5f9ca9b8581eca5f18c564fab8b669cd8:src/Bank3Service.java
         if (user.getSaldo() < value) {
           JOptionPane.showMessageDialog(null,"Saldo insuficiente!", "", JOptionPane.ERROR_MESSAGE);
           return 0.0f;
