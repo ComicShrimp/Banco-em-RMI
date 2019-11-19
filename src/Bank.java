@@ -1,9 +1,9 @@
-package BancoRMI;
-
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 interface Bank extends Remote {
+
+  public String getName() throws RemoteException;
 
   public boolean getAccount(String token) throws RemoteException;
 

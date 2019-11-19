@@ -1,5 +1,3 @@
-package BancoRMI;
-
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -11,6 +9,8 @@ public class BankService extends UnicastRemoteObject implements Bank {
       "5314 4726 2902 1966" };
 
   private static final long serialVersionUID = 1L;
+
+  String name = "BB";
 
   public BankService() throws RemoteException {
 
@@ -30,6 +30,13 @@ public class BankService extends UnicastRemoteObject implements Bank {
     }
 
     return false;
+  }
+
+  /**
+   * @return the name
+   */
+  public String getName() {
+    return name;
   }
 
   public double makeWithdraw(String tokenId, double value) throws RemoteException {

@@ -1,5 +1,3 @@
-package BancoRMI;
-
 import java.sql.*;
 
 public class Database {

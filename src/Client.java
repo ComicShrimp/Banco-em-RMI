@@ -1,5 +1,3 @@
-package BancoRMI;
-
 import java.rmi.Naming;
 import java.util.Scanner;
 
@@ -11,6 +9,10 @@ public class Client {
 
     try {
       Bank bd = (Bank) Naming.lookup("//127.0.0.1:1099/BancoService");
+      System.out.println(bd.getName());
+      Bank st = (Bank) Naming.lookup("//127.0.0.1:1099/BancoService2");
+      System.out.println(st.getName());
+
       boolean b = bd.getAccount("5314 4726 2902 1966");
       if (b) {
         while (true) {
