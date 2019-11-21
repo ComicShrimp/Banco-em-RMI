@@ -176,7 +176,8 @@ public class BankService extends UnicastRemoteObject implements Bank {
   public void getSale(String tokenId) throws RemoteException {
     for (User user : database) {
       if (user.getCardNumber().equals(tokenId)) {
-        System.out.println(user.getSaldo());
+        String msg = "Nome: "+user.getNome()+"\nNúmero do Cartão: "+user.getCardNumber()+"\nSaldo: R$"+String.valueOf(user.getSaldo()); 
+        JOptionPane.showMessageDialog(null, msg);  
         break;
       }
     }
