@@ -17,7 +17,7 @@ public class Bank3Service extends UnicastRemoteObject implements Bank {
 
   private static final long serialVersionUID = 1L;
 
-  String name = "Bradesco";
+  String name = "Itau";
 
   public Bank3Service() throws RemoteException {
     File baseDados = new File("../src/bases/Banco3.csv");
@@ -64,13 +64,11 @@ public class Bank3Service extends UnicastRemoteObject implements Bank {
   public String getName() {
     return name;
   }
-  
 
-
-  public void writeCsv(){
+  public void writeCsv() {
     FileWriter fileWriter = null;
 
-    try{
+    try {
       fileWriter = new FileWriter("../src/bases/Banco3.csv");
       fileWriter.append(FILE_HEADER.toString());
       fileWriter.append("\n");
@@ -177,8 +175,9 @@ public class Bank3Service extends UnicastRemoteObject implements Bank {
   public void getSale(String tokenId) throws RemoteException {
     for (User user : database) {
       if (user.getCardNumber().equals(tokenId)) {
-        String msg = "Nome: "+user.getNome()+"\nNúmero do Cartão: "+user.getCardNumber()+"\nSaldo: R$"+String.valueOf(user.getSaldo()); 
-        JOptionPane.showMessageDialog(null, msg);  
+        String msg = "Nome: " + user.getNome() + "\nNúmero do Cartão: " + user.getCardNumber() + "\nSaldo: R$"
+            + String.valueOf(user.getSaldo());
+        JOptionPane.showMessageDialog(null, msg);
         break;
       }
     }

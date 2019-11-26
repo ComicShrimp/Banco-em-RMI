@@ -3,11 +3,14 @@ import java.rmi.Remote;
 import java.rmi.registry.LocateRegistry;
 
 public class Server {
+  // Construtor do Server
   Server() {
     try {
+      // Registra o servidor no rmi ("rmiregistry")
       System.setProperty("java.rmi.hostname", "127.0.0.1");
       LocateRegistry.createRegistry(1099);
 
+      // Disponibiliza todos os 3 BankServices
       Bank bank1 = new BankService();
       Naming.rebind("BancoService", (Remote) bank1);
 

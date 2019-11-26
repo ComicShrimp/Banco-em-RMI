@@ -15,33 +15,33 @@ public class BankService extends UnicastRemoteObject implements Bank {
 
   private static final long serialVersionUID = 1L;
 
-  String name = "BB";
+  String name = "Banco do Brasil";
 
   public BankService() throws RemoteException {
-     File baseDados = new File("../src/bases/Banco1.csv");   
-     
-     String[] campos = {};
-     try {
-       Scanner leitor = new Scanner(baseDados);
-        
-       leitor.nextLine();
+    File baseDados = new File("../src/bases/Banco1.csv");
 
-       while(leitor.hasNext()){
-         String l = leitor.nextLine();
-         campos = l.split(",");
-         User u = new User();
-         u.setNome(String.valueOf(campos[0]));
-         u.setCardNumber(String.valueOf(campos[1]));
-         u.setPassword(String.valueOf(campos[2]));
-         u.setNomeBanco(String.valueOf(campos[3]));
-         u.setSaldo(Double.valueOf(campos[4])); 
-         database.add(u);
-        }
+    String[] campos = {};
+    try {
+      Scanner leitor = new Scanner(baseDados);
 
-       leitor.close();
-     } catch (FileNotFoundException e) {
-       e.printStackTrace();
-     }
+      leitor.nextLine();
+
+      while (leitor.hasNext()) {
+        String l = leitor.nextLine();
+        campos = l.split(",");
+        User user = new User();
+        user.setNome(String.valueOf(campos[0]));
+        user.setCardNumber(String.valueOf(campos[1]));
+        user.setPassword(String.valueOf(campos[2]));
+        user.setNomeBanco(String.valueOf(campos[3]));
+        user.setSaldo(Double.valueOf(campos[4]));
+        database.add(user);
+      }
+
+      leitor.close();
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
   }
 
   public int getAccount(String token) throws RemoteException {
@@ -51,8 +51,8 @@ public class BankService extends UnicastRemoteObject implements Bank {
         return database.indexOf(u);
       }
     }
-    JOptionPane.showMessageDialog(null, "Inserir o cartão corretamente!", "Conta não encontrada!", JOptionPane.ERROR_MESSAGE);
-
+    JOptionPane.showMessageDialog(null, "Inserir o cartão corretamente!", "Conta não encontrada!",
+        JOptionPane.ERROR_MESSAGE);
 
     return -1;
   }
@@ -63,10 +63,8 @@ public class BankService extends UnicastRemoteObject implements Bank {
   public String getName() {
     return name;
   }
-  
 
-
-  public void writeCsv(){
+  public void writeCsv() {
     FileWriter fileWriter = null;
 
     try {
@@ -107,18 +105,18 @@ public class BankService extends UnicastRemoteObject implements Bank {
       if (user.getCardNumber().equals(tokenId)) {
 
         if (user.getSaldo() < value) {
-          JOptionPane.showMessageDialog(null,"Saldo insuficiente!", "", JOptionPane.ERROR_MESSAGE);
+          JOptionPane.showMessageDialog(null, "Saldo insuficiente!", "", JOptionPane.ERROR_MESSAGE);
           return 0.0f;
         } else {
-          if(user.getPassword().equals(password)){
+          if (user.getPassword().equals(password)) {
             takenOutValue = user.getSaldo() - value;
             user.setSaldo((double) (user.getSaldo() - value));
             writeCsv();
             return takenOutValue;
-          }else{
-            JOptionPane.showMessageDialog(null,"Senha Incorreta", "Erro", JOptionPane.ERROR_MESSAGE);
+          } else {
+            JOptionPane.showMessageDialog(null, "Senha Incorreta", "Erro", JOptionPane.ERROR_MESSAGE);
           }
-          
+
         }
 
       }
@@ -130,14 +128,14 @@ public class BankService extends UnicastRemoteObject implements Bank {
   public void makeDeposit(String tokenId, String password, double value) throws RemoteException {
     for (User user : database) {
       if (user.getCardNumber().equals(tokenId)) {
-        if(user.getPassword().equals(password)){
+        if (user.getPassword().equals(password)) {
           user.setSaldo(user.getSaldo() + value);
           writeCsv();
           break;
-        }else{
-          JOptionPane.showMessageDialog(null,"Senha Incorreta", "Erro", JOptionPane.ERROR_MESSAGE); 
+        } else {
+          JOptionPane.showMessageDialog(null, "Senha Incorreta", "Erro", JOptionPane.ERROR_MESSAGE);
         }
-        
+
       }
     }
   }
@@ -155,20 +153,21 @@ public class BankService extends UnicastRemoteObject implements Bank {
     }
 
     if (database.get(fi).getSaldo() < value) {
-      JOptionPane.showMessageDialog(null,"Saldo insuficiente para realizar a transferência!", "", JOptionPane.ERROR_MESSAGE);
+      JOptionPane.showMessageDialog(null, "Saldo insuficiente para realizar a transferência!", "",
+          JOptionPane.ERROR_MESSAGE);
       return false;
     } else {
-      if(database.get(fi).getPassword().equals(password)){
+      if (database.get(fi).getPassword().equals(password)) {
         database.get(fi).setSaldo(database.get(fi).getSaldo() - value);
-        database.get(ti).setSaldo(database.get(ti).getSaldo() + value);        
+        database.get(ti).setSaldo(database.get(ti).getSaldo() + value);
         writeCsv();
-        JOptionPane.showMessageDialog(null,"Transferência Realizada com sucesso!", "", JOptionPane.OK_OPTION);
+        JOptionPane.showMessageDialog(null, "Transferência Realizada com sucesso!", "", JOptionPane.OK_OPTION);
         return true;
-      }else{
-        JOptionPane.showMessageDialog(null,"Senha Incorreta", "Erro", JOptionPane.ERROR_MESSAGE); 
+      } else {
+        JOptionPane.showMessageDialog(null, "Senha Incorreta", "Erro", JOptionPane.ERROR_MESSAGE);
         return false;
       }
-      
+
     }
 
   }
@@ -176,8 +175,9 @@ public class BankService extends UnicastRemoteObject implements Bank {
   public void getSale(String tokenId) throws RemoteException {
     for (User user : database) {
       if (user.getCardNumber().equals(tokenId)) {
-        String msg = "Nome: "+user.getNome()+"\nNúmero do Cartão: "+user.getCardNumber()+"\nSaldo: R$"+String.valueOf(user.getSaldo()); 
-        JOptionPane.showMessageDialog(null, msg);  
+        String msg = "Nome: " + user.getNome() + "\nNúmero do Cartão: " + user.getCardNumber() + "\nSaldo: R$"
+            + String.valueOf(user.getSaldo());
+        JOptionPane.showMessageDialog(null, msg);
         break;
       }
     }
