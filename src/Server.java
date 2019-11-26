@@ -7,6 +7,7 @@ public class Server {
     try {
       System.setProperty("java.rmi.hostname", "127.0.0.1");
       LocateRegistry.createRegistry(1099);
+
       Bank bank1 = new BankService();
       Naming.rebind("BancoService", (Remote) bank1);
 
